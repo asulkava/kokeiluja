@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Blackjack simulator</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align: center">Update Card</h1>
+    <div id="box">
+        <form action="/update/{{task.id}}" method="POST">
+            <input type="number" name="content" id="content" value="{{task.content}}" style="background-color: lightblue;">
+            <input type="submit" value="Update">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

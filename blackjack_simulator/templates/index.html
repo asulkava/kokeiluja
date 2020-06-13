@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Blackjack simulator</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align: center">Blackjack simulator</h1>
+    <h3 style="text-align: center">Dealer win chance: {{dealer_win}}%</h3>
+    <form action="/deleteAll" style="text-align: center">
+        <input type="submit" value="Refresh deck" />
+    </form>
+</div>
+<div id="player-id-div">
+    <h3 style="text-align: center">Chance you bust: {{ percentage_player }}%</h3>
+    {% if playercards|length < 1 %}
+    <h4 style="text-align:center">No cards added.</h4>
+    {% else %}
+    <table id="player-table">
+        <tr>
+            <th>Card</th>
+            <th>Actions</th>
+        </tr>
+        {% for card in playercards %}
+            <tr>
+                <td>{{ card.content }}</td>
+                <td>
+                    <a href="/delete/{{card.id}}">Delete</a>
+                    <br>
+                    <a href="/update/{{card.id}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <div id="box">
+    <form action="/player" method="POST" id="player-box">
+        <input type="number" name="content" id="content" style="background-color: lightblue;">
+        <input type="submit" value="Add card for player">
+    </form>
+    </div>
+</div>
+<div id="dealer-id-div">
+    <h3 style="text-align: center">Chance dealer busts: {{ percentage_dealer }}%</h3>
+    {% if dealercards|length < 1 %}
+    <h4 style="text-align:center">No cards added.</h4>
+    {% else %}
+    <table id="dealer-table">
+        <tr>
+            <th>Card</th>
+            <th>Actions</th>
+        </tr>
+        {% for card in dealercards %}
+            <tr>
+                <td>{{ card.content }}</td>
+                <td>
+                    <a href="/delete/{{card.id}}">Delete</a>
+                    <br>
+                    <a href="/update/{{card.id}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <div id="box">
+    <form action="/dealer" method="POST">
+        <input type="number" name="content" id="content" style="background-color: lightblue;">
+        <input type="submit" value="Add card for dealer">
+    </form>
+    </div>
+</div>
+
+{% endblock %}
