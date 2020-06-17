@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css"/>
+    <title>Some Webdatabase</title>
+</head>
+<body>
+    <h1 style="text-align: center;">ok</h1>
+    <h3 style="text-align: center">Number of files: {{ muuttuja }} </h3>
+    <div id="box">
+        <form action="/filter" method="POST">
+            <input type="text" name="content" style="background-color: lightblue;">
+            <input type="submit" value="Filter by filename">
+        </form>
+    </div>
+    {% if files|length < 1 %}
+    <h4 style="text-align:center">No files added.</h4>
+    {% else %}
+    <table id="file-table">
+        <tr>
+            <th>File name</th>
+            <th>File type</th>
+            <th></th>
+        </tr>
+        {% for file in files %}
+            <tr>
+                <td>{{ file.split('.', 1)[0] }}</td>
+                <td>{{ file.split('.', 1)[1] }}</td>
+                <td><a href="/delete/{{ file }}">Delete</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+</html>
