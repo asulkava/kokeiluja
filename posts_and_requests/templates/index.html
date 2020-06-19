@@ -4,35 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous" media="all"/>
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css"/>
     <title>Some Webdatabase</title>
 </head>
 <body>
-    <h1 style="text-align: center;">ok</h1>
-    <h3 style="text-align: center">Number of files: {{ muuttuja }} </h3>
+    <h1 style="text-align: center;">Some database</h1>
+    <h3 style="text-align: center">Number of files: {{ n_of_files }} </h3>
     <div id="box">
         <form action="/filter" method="POST">
-            <input type="text" name="content" style="background-color: lightblue;">
-            <input type="submit" value="Filter by filename">
+            <input type="text" placeholder="{{ filter }}" id="content" name="content"/>
+            <button type="submit" class="btn btn-primary">Filter by filename</button>
         </form>
     </div>
     {% if files|length < 1 %}
-    <h4 style="text-align:center">No files added.</h4>
+    <h4 style="text-align:center">No files.</h4>
     {% else %}
     <table id="file-table">
         <tr>
             <th>File name</th>
             <th>File type</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
         {% for file in files %}
             <tr>
-                <td>{{ file.split('.', 1)[0] }}</td>
+                <td>
+                    <a href="/show/{{ file}}">{{ file.split('.', 1)[0] }}</a>
+                </td>
                 <td>{{ file.split('.', 1)[1] }}</td>
-                <td><a href="/delete/{{ file }}">Delete</a></td>
+                <td>
+                    <a href="/delete/{{ file }}">Delete</a>
+                    <br>
+                    <a href="/download/{{ file }}">Download</a>
+                </td>
             </tr>
         {% endfor %}
     </table>
     {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3>Upload a file</h3>
+                <hr>
+                <form method=POST enctype=multipart/form-data action="/upload">
+
+                    <div class="form-group">
+                        <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="content" id="file">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload file</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

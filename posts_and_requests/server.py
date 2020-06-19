@@ -3,10 +3,11 @@ from os import listdir
 from os.path import isfile, join
 
 from flask import Flask, request, abort, jsonify, send_from_directory
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, url_for, redirect, flash, make_response
 
 ROOT = os.getcwd()
-UPLOAD_DIRECTORY = "{}/posts_and_requests/api_uploaded_files".format(ROOT)
+UPLOAD_DIRECTORY = "{}/posts_and_requests/static/api_uploaded_files".format(ROOT)
+
 
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
@@ -22,11 +23,14 @@ def get_files(filter_key):
     return [files, n_of_files]
 
 api = Flask(__name__)
+api.config["FILE_UPLOADS"] = UPLOAD_DIRECTORY
+api.config["ALLOWED_EXTENSIONS"] = ["TXT", "PY", "C", "XML"]
+
 
 @api.route('/')
 def default():
     [files, n_of_files] = get_files("")
-    return render_template('index.html', muuttuja=n_of_files, files=files)
+    return render_template('index.html', n_of_files=n_of_files, files=files)
 
 @api.route("/files")
 def list_files():
@@ -65,11 +69,44 @@ def delete_file(path):
         return redirect('/')
     except OSError:
         return redirect('/')
-"""
-@api.route("/filter/<filter_value>")
-def filter_page(filter_value):
-    [n_of_files, files] = get_files(filter_value)
-    return render_template('index.html', muuttuja=n_of_files, files=files)
-"""
+
+@api.route("/download/<path:path>")
+def download_file(path):
+    return redirect('/files/'+path)
+
+@api.route("/show/<path:path>")
+def show_file(path):
+    file_path = os.path.join(api.config["FILE_UPLOADS"], path)
+    return redirect('/')
+
+@api.route("/filter", methods=['POST', 'GET'])
+def filter_page():
+    filter_value = ""
+    if request.method == 'POST':
+        filter_value = str(request.form['content'])
+    if filter_value == "":
+        return redirect('/')
+    [files, n_of_files] = get_files(filter_value)
+    return render_template('index.html', n_of_files=n_of_files, files=files, filter=filter_value)
+
+def allowed_extensions(filename):
+    if not "." in filename:
+        return False
+    ext = filename.rsplit('.', 1)[1]
+    if ext.upper() in api.config["ALLOWED_EXTENSIONS"]:
+        return True
+    else:
+        return False
+
+@api.route("/upload", methods=['POST', 'GET'])
+def upload_file():
+    if request.method == 'POST':
+        if request.files:
+            uploaded_file = request.files["content"]
+            if uploaded_file.filename != "" and allowed_extensions(uploaded_file.filename):
+                uploaded_file.save(os.path.join(api.config["FILE_UPLOADS"], uploaded_file.filename))
+    return redirect('/')
+
+
 if __name__ == "__main__":
     api.run(debug=True, port=8000)
