@@ -1,9 +1,9 @@
-import os
+import os, time, datetime
 from os import listdir
 from os.path import isfile, join
 
 from flask import Flask, request, abort, jsonify, send_from_directory
-from flask import render_template, url_for, redirect, flash, make_response
+from flask import render_template, url_for, redirect, flash
 
 ROOT = os.getcwd()
 UPLOAD_DIRECTORY = "{}/posts_and_requests/static/api_uploaded_files".format(ROOT)
@@ -14,13 +14,17 @@ if not os.path.exists(UPLOAD_DIRECTORY):
 
 def get_files(filter_key):
     files = []
+    times_modified = []
     for filename in os.listdir(UPLOAD_DIRECTORY):
         path = os.path.join(UPLOAD_DIRECTORY, filename)
         if os.path.isfile(path) and (filter_key in filename):
             files.append(filename)
+            t = os.path.getmtime(path)
+            year,month,day,hour,minute,second=time.localtime(t)[:-3]
+            times_modified.append("%02d/%02d/%d %02d:%02d:%02d"%(day,month,year,hour,minute,second))
     n_of_files = len([name for name in os.listdir(UPLOAD_DIRECTORY) \
         if os.path.isfile(os.path.join(UPLOAD_DIRECTORY, name))])
-    return [files, n_of_files]
+    return [files, n_of_files, times_modified]
 
 api = Flask(__name__)
 api.config["FILE_UPLOADS"] = UPLOAD_DIRECTORY
@@ -29,8 +33,8 @@ api.config["ALLOWED_EXTENSIONS"] = ["TXT", "PY", "C", "XML"]
 
 @api.route('/')
 def default():
-    [files, n_of_files] = get_files("")
-    return render_template('index.html', n_of_files=n_of_files, files=files)
+    [files, n_of_files, times_modified] = get_files("")
+    return render_template('index.html', files=[files, n_of_files, times_modified])
 
 @api.route("/files")
 def list_files():
@@ -77,7 +81,13 @@ def download_file(path):
 @api.route("/show/<path:path>")
 def show_file(path):
     file_path = os.path.join(api.config["FILE_UPLOADS"], path)
-    return redirect('/')
+    try:
+        with open(file_path, "r") as f:
+            content = f.read()
+        [files, n_of_files, times_modified] = get_files("")
+        return render_template('index.html', files=[files, n_of_files, times_modified], file_content = [path, content])
+    except:
+        return redirect('/')
 
 @api.route("/filter", methods=['POST', 'GET'])
 def filter_page():
@@ -86,8 +96,8 @@ def filter_page():
         filter_value = str(request.form['content'])
     if filter_value == "":
         return redirect('/')
-    [files, n_of_files] = get_files(filter_value)
-    return render_template('index.html', n_of_files=n_of_files, files=files, filter=filter_value)
+    [files, n_of_files, times_modified] = get_files(filter_value)
+    return render_template('index.html', files=[files, n_of_files, times_modified], filter=filter_value)
 
 def allowed_extensions(filename):
     if not "." in filename:

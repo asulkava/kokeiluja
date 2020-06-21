@@ -10,34 +10,41 @@
 </head>
 <body>
     <h1 style="text-align: center;">Some database</h1>
-    <h3 style="text-align: center">Number of files: {{ n_of_files }} </h3>
+    <h3 style="text-align: center">Number of files: {{ files[1] }} </h3>
     <div id="box">
         <form action="/filter" method="POST">
             <input type="text" placeholder="{{ filter }}" id="content" name="content"/>
             <button type="submit" class="btn btn-primary">Filter by filename</button>
         </form>
     </div>
-    {% if files|length < 1 %}
+    {% if files[0]|length < 1 %}
     <h4 style="text-align:center">No files.</h4>
     {% else %}
     <table id="file-table">
-        <tr>
-            <th>File name</th>
-            <th>File type</th>
-            <th>Actions</th>
-        </tr>
-        {% for file in files %}
+        <thead>
             <tr>
+                <th id="a">File type</th>
+                <th id="b">File name</th>
+                <th id="c">Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        {% for i in range(0, files[0]|length) %}
+        <tbody>
+            <tr>
+                
+                <td>{{ files[0][i].split('.', 1)[1] }}</td>
                 <td>
-                    <a href="/show/{{ file}}">{{ file.split('.', 1)[0] }}</a>
+                    <a href="/show/{{ files[0][i]}}">{{ files[0][i].split('.', 1)[0] }}</a>
                 </td>
-                <td>{{ file.split('.', 1)[1] }}</td>
+                <td>{{ files[2][i] }}</td>
                 <td>
-                    <a href="/delete/{{ file }}">Delete</a>
+                    <a href="/delete/{{ files[0][i] }}">Delete</a>
                     <br>
-                    <a href="/download/{{ file }}">Download</a>
+                    <a href="/download/{{ files[0][i] }}">Download</a>
                 </td>
             </tr>
+        </tbody>
         {% endfor %}
     </table>
     {% endif %}
@@ -59,6 +66,9 @@
             </div>
         </div>
     </div>
-
+{% if file_content %}
+<h3 id="preview-header">Content of: {{ file_content[0] }}</h3>
+<pre id="preview">{{ file_content[1] }}</pre>
+{% endif %}
 </body>
 </html>

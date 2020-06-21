@@ -30,10 +30,32 @@ a {
     margin-top: 10px;
 }
 
+#a {
+  width: 100px;
+}
+
+#b {
+  width: 1200px;
+}
+
+#c {
+  width: 100px;
+}
+
 #box {
     color: black;
     text-align: center;
     margin-top: 10px;
+}
+
+#preview-header {
+  text-align: center;
+}
+
+#preview {
+  color: white;
+  background-color: #053777;
+  margin: auto;
 }
 
 .form-group {
