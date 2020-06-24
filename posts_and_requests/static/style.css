@@ -28,14 +28,16 @@ a {
 
 #file-table {
     margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 30px;
 }
 
 #a {
-  width: 100px;
+  width: 80px;
 }
 
 #b {
-  width: 1200px;
+  width: 900px;
 }
 
 #c {
@@ -79,28 +81,9 @@ a {
     padding: 0;
     font-weight: 300;
     height: 100%;
-    background: #053777;
+    background: rgb(14, 71, 146);
     color: #fff;
-    font-size: 16px;
-    overflow: hidden;
-    background: -moz-linear-gradient(top, #053777 0%, #00659b 100%);
-    /* FF3.6+ */
-    
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #053777), color-stop(100%, #00659b));
-    /* Chrome,Safari4+ */
-    
-    background: -webkit-linear-gradient(top, #053777 0%, #00659b 100%);
-    /* Chrome10+,Safari5.1+ */
-    
-    background: -o-linear-gradient(top, #053777 0%, #00659b 100%);
-    /* Opera 11.10+ */
-    
-    background: -ms-linear-gradient(top, #053777 0%, #00659b 100%);
-    /* IE10+ */
-    
-    background: linear-gradient(to bottom, #053777 0%, #00659b 100%);
-    /* W3C */
-    
+    font-size: 16px;  
   }
   
   h1 {
@@ -131,5 +114,11 @@ a {
     text-align: center;
     max-width: 200px;
     margin: auto;
+    margin-bottom: 30px;
+  }
+
+  #preview-box {
+    margin-left: 25px;
+    margin-right: 25px;
     margin-bottom: 30px;
   }

@@ -28,7 +28,7 @@ def get_files(filter_key):
 
 api = Flask(__name__)
 api.config["FILE_UPLOADS"] = UPLOAD_DIRECTORY
-api.config["ALLOWED_EXTENSIONS"] = ["TXT", "PY", "C", "XML"]
+api.config["ALLOWED_EXTENSIONS"] = ["TXT", "PY", "C", "XML", "M"]
 
 
 @api.route('/')
