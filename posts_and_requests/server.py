@@ -5,7 +5,7 @@ from os.path import isfile, join
 from flask import Flask, request, abort, jsonify, send_from_directory
 from flask import render_template, url_for, redirect, flash
 
-ROOT = os.getcwd()
+ROOT = os.path.dirname(os.path.realpath(__file__))
 UPLOAD_DIRECTORY = "{}/posts_and_requests/static/api_uploaded_files".format(ROOT)
 
 
@@ -28,7 +28,7 @@ def get_files(filter_key):
 
 api = Flask(__name__)
 api.config["FILE_UPLOADS"] = UPLOAD_DIRECTORY
-api.config["ALLOWED_EXTENSIONS"] = ["TXT", "PY", "C", "XML"]
+api.config["ALLOWED_EXTENSIONS"] = ["TXT", "PY", "C", "XML", "M"]
 
 
 @api.route('/')
